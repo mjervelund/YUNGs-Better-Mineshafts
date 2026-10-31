@@ -29,8 +29,8 @@ public class DisableVanillaMineshaftsMixin {
             long $$5,
             ChunkAccess $$6,
             ChunkPos $$7,
-            SectionPos $$8,
             ResourceKey<Level> $$9,
+            net.minecraft.world.level.biome.Climate.Sampler climateSampler,
             CallbackInfoReturnable<Boolean> cir
     ) {
         if (BetterMineshaftsCommon.CONFIG.disableVanillaMineshafts && structureSetEntry.structure().value().type() == StructureType.MINESHAFT) {
