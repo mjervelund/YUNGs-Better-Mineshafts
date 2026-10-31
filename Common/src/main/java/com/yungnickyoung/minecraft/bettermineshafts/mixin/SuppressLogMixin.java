@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SuppressLogMixin {
     @Inject(method = "logAndPauseIfInIde(Ljava/lang/String;)V", at = @At("HEAD"), cancellable = true, require = 0)
     private static void logAndPauseIfInIde(String string, CallbackInfo ci) {
-        if (string.startsWith("Detected setBlock in a far chunk") && string.contains("bettermineshafts:mineshaft")) {
+        if ((string.startsWith("Detected setBlock in a far chunk") || string.startsWith("Detected unsafe terrain read")) && string.contains("bettermineshafts:mineshaft")) {
             ci.cancel();
         }
     }
