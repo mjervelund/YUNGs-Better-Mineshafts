@@ -100,8 +100,13 @@ public class SideRoomDungeon extends BetterMineshaftPiece {
 
         // Spawner
         BlockPos spawnerPos = this.getWorldPos(4, 1, 5);
-        world.setBlock(spawnerPos, Blocks.SPAWNER.defaultBlockState(), 2);
-        BlockEntity blockEntity = world.getBlockEntity(spawnerPos);
+        // Only inside this chunk's box, like vanilla's mineshaft spawner. postProcess runs once for every chunk the
+        // piece touches; outside the box the spawner can be in a neighbouring chunk that is already loaded, where
+        // setEntityId -> setChanged -> updateNeighbourForOutputSignal reads the live level from the worldgen thread
+        // and waits for the main thread (worldgen deadlock, issue #120).
+        boolean spawnerInBox = box.isInside(spawnerPos);
+        if (spawnerInBox) world.setBlock(spawnerPos, Blocks.SPAWNER.defaultBlockState(), 2);
+        BlockEntity blockEntity = spawnerInBox ? world.getBlockEntity(spawnerPos) : null;
         if (blockEntity instanceof SpawnerBlockEntity) {
             ((SpawnerBlockEntity) blockEntity).setEntityId(EntityTypes.CAVE_SPIDER, randomSource);
         }
